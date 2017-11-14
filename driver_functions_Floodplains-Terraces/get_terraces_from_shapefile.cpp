@@ -87,6 +87,7 @@ int main (int nNumberofArgs,char *argv[])
 	bool_default_map["Filter topography"] = true;
 	bool_default_map["write_hillshade"] = false;
 	bool_default_map["load_previous_rasters"] = false;
+	bool_default_map["remove_channel_terraces"] = false;
 
 	// set default string parameters
 	string_default_map["input_shapefile"] = "NULL";
@@ -263,6 +264,8 @@ int main (int nNumberofArgs,char *argv[])
 
 	// get the terrace pixels
 	LSDTerrace Terraces(SwathRaster, Slope_new, ChanNetwork, FlowInfo, relief_threshold_from_qq, slope_threshold_from_qq, this_int_map["Min patch size"], this_int_map["Threshold_SO"], this_int_map["Min terrace height"]);
+
+	Terraces.remove_terrace_connected_to_channels(this_int_map["Threshold_SO"], FlowInfo, ChanNetwork);
 	LSDIndexRaster ConnectedComponents = Terraces.print_ConnectedComponents_to_Raster();
 	string CC_ext = "_terrace_IDs";
 	ConnectedComponents.write_raster((DATA_DIR+DEM_ID+CC_ext), DEM_extension);

@@ -371,15 +371,6 @@ void LSDTerrace::remove_terrace_connected_to_channels(int threshold_SO, LSDFlowI
 }
 
 //----------------------------------------------------------------------------------------
-// This function compiles the data along each terrace into a single bin for each point
-// along the main stem. It returns a vector of vectors with
-//----------------------------------------------------------------------------------------
-// vector< vector<float> > LSDTerrace::Collate_TerraceData_Along_MainStem()
-// {
-//
-// }
-
-//----------------------------------------------------------------------------------------
 // FUNCTIONS TO GENERATE RASTERS
 //----------------------------------------------------------------------------------------
 
