@@ -81,6 +81,14 @@ void Get_Relief_of_Nearest_Channel(LSDJunctionNetwork& ChanNetwork, LSDFlowInfo&
 	/// @date 26/10/16
 	void get_terraces_along_main_stem(int junction_number, LSDJunctionNetwork& ChanNetwork, LSDFlowInfo& FlowInfo, LSDRaster& DistFromOutlet);
 
+  /// @brief This function removes terraces that are connected to a channel pixel >= than a threshold stream order.
+	/// @param threshold_SO threshold stream order, terraces connected to a channel greater or equal to this stream order will be removed
+	/// @param FlowInfo LSDFlowInfo object
+	/// @param JN LSDJunctionNetwork object
+	/// @author FJC
+	/// @date 14/11/17
+  void remove_terrace_connected_to_channels(int threshold_SO, LSDFlowInfo& FlowInfo, LSDJunctionNetwork& JN);
+
 	/// FUNCTIONS TO GENERATE RASTERS
 
 	/// @brief This function prints the connected components array to a raster

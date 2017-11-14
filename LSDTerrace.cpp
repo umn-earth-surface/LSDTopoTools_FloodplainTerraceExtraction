@@ -348,7 +348,26 @@ void LSDTerrace::remove_terrace_connected_to_channels(int threshold_SO, LSDFlowI
 	}
 
 	// get the unique IDs of terraces to remove
+	terraces_to_remove = Unique(terraces_to_remove);
 
+	// loop through the CC array and remove any terraces that correspond to those in the removal vector
+	for (int row = 0; row < NRows; row++)
+	{
+		for (int col = 0; col < NCols; col++)
+		{
+			int this_ID = ConnectedComponents_Array[row][col];
+			if (this_ID != NoDataValue)
+			{
+				// see if this ID is in the removal vector
+				vector<int>::iterator find_it;
+				find_it = find(terraces_to_remove.begin(), terraces_to_remove.end(), this_ID);
+				if (find_it != terraces_to_remove.end())
+				{
+					ConnectedComponents_Array[row][col] = NoDataValue;
+				}
+			}
+		}
+	}
 }
 
 //----------------------------------------------------------------------------------------
