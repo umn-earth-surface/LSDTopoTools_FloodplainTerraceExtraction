@@ -317,6 +317,40 @@ void LSDTerrace::get_terraces_along_main_stem(int junction_number, LSDJunctionNe
 	}
 }
 
+//------------------------------------------------------------------------------------
+// This function removes terraces that are connected to the channel network - must
+// specify a threshold stream order: terraces connected to channels ABOVE this threshold
+// will be removed
+// FJC 14/11/17
+//------------------------------------------------------------------------------------
+void LSDTerrace::remove_terrace_connected_to_channels(int threshold_SO, LSDFlowInfo& FlowInfo, LSDJunctionNetwork& JN)
+{
+	int NTerraces = TerraceIDs.size();
+	vector<int> terraces_to_remove;
+
+	for (int row = 0; row < NRows; row++)
+	{
+		for (int col = 0; col < NCols; col++)
+		{
+			// get all the pixels in this ID
+			if (ConnectedComponents_Array[row][col] != NoDataValue)
+			{
+				// check if this ID is connected to the channel
+				int this_node = FlowInfo.retrieve_node_from_row_and_column(row,col);
+				int this_SO = JN.get_StreamOrder_of_Node(FlowInfo, this_node);
+				if (this_SO >= threshold_SO)
+				{
+					// push back this ID to the map of ones to remove
+					terraces_to_remove.push_back(ConnectedComponents_Array[row][col]);
+				}
+			}
+		}
+	}
+
+	// get the unique IDs of terraces to remove
+
+}
+
 //----------------------------------------------------------------------------------------
 // This function compiles the data along each terrace into a single bin for each point
 // along the main stem. It returns a vector of vectors with
