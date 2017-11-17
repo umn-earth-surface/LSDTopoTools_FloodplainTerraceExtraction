@@ -12640,7 +12640,7 @@ float LSDRaster::get_threshold_for_floodplain_QQ(string q_q_filename, float thre
 					cout << "Quantile value at threshold: " << quantile_values[i] << " Normal variate: " <<  normal_variates[i] << endl;
 				}
 				else flag = 0;
-			}
+			 }
       }
    // }
   }
