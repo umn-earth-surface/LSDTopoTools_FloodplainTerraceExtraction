@@ -325,6 +325,7 @@ void LSDTerrace::get_terraces_along_main_stem(int junction_number, LSDJunctionNe
 //------------------------------------------------------------------------------------
 void LSDTerrace::remove_terrace_connected_to_channels(int threshold_SO, LSDFlowInfo& FlowInfo, LSDJunctionNetwork& JN)
 {
+	cout << "Removing terrace IDs connected to channels..." << endl;
 	int NTerraces = TerraceIDs.size();
 	vector<int> terraces_to_remove;
 

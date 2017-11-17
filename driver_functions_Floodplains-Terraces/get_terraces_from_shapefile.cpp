@@ -89,6 +89,7 @@ int main (int nNumberofArgs,char *argv[])
 	bool_default_map["write_hillshade"] = false;
 	bool_default_map["load_previous_rasters"] = false;
 	bool_default_map["remove_channel_terraces"] = false;
+	bool_default_map["print_stream_order_raster"] = false;
 
 	// set default string parameters
 	string_default_map["input_shapefile"] = "NULL";
@@ -209,6 +210,13 @@ int main (int nNumberofArgs,char *argv[])
 	// now get the junction network
 	LSDJunctionNetwork ChanNetwork(sources, FlowInfo);
 	cout << "\t Got the channel network" << endl;
+
+	if (this_bool_map["print_stream_order_raster"])
+	{
+		LSDIndexRaster SOArray = ChanNetwork.StreamOrderArray_to_LSDIndexRaster();
+		string SO_raster_name = DATA_DIR+DEM_ID+"_SO";
+		SOArray.write_raster(SO_raster_name,DEM_extension);
+	}
 
 	cout << "\t loading baseline points" << endl;
 	PointData BaselinePoints = LoadShapefile(path_name+this_string_map["input_shapefile"].c_str());
