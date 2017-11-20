@@ -2,8 +2,8 @@ import numpy as np, matplotlib.pyplot as plt
 from matplotlib import rcParams
 
 # Set up some basiic parameters for the plots
-rcParams['font.family'] = 'sans-serif'
-rcParams['font.sans-serif'] = ['arial']
+# rcParams['font.family'] = 'sans-serif'
+# rcParams['font.sans-serif'] = ['arial']
 rcParams['font.size'] = 12
 rcParams['legend.numpoints'] = 1
 
@@ -61,42 +61,42 @@ def make_q_q_plots(snv1,values1,mn_values1,snv2,values2,mn_values2, thresh_1, th
    range1 = np.ptp(values1)
    #print "Relief range: ", range1
    for i in range(0,len(snv1)):
-        if (snv1[i] <= 0):
-            frac_diff = abs((values1[i] - mn_values1[i]))/range1
-            if (frac_diff < thresh_1):
-                if (flag == 0):
-                    flag = 1
-                    count = 0
-                    for j in range(1,min_length+1):
-                        next_frac = abs((values1[i+j] - mn_values1[i+j]))/range1
-                        if (next_frac < thresh_1):
-                            count = count+1
-                    if (count == min_length):
-                        relief_thresh = snv1[i]
-                        print "Relief threshold: ", values1[i]
-                    else:
-                        flag = 0
+    #    if (snv1[i] <= 0):
+        frac_diff = abs((values1[i] - mn_values1[i]))/range1
+        if (frac_diff < thresh_1):
+            if (flag == 0):
+                flag = 1
+                count = 0
+                for j in range(1,min_length+1):
+                    next_frac = abs((values1[i+j] - mn_values1[i+j]))/range1
+                    if (next_frac < thresh_1):
+                        count = count+1
+                if (count == min_length):
+                    relief_thresh = snv1[i]
+                    print "Relief threshold: ", values1[i]
+                else:
+                    flag = 0
 
    flag = 0
    range2 = np.ptp(values2)
    print "Slope range: ", range2
    for i in range(0,len(snv2)):
-       if (snv2[i] <= 0):
-           frac_diff = abs((values2[i] - mn_values2[i]))/range2
-        #    print frac_diff
-           if (frac_diff < thresh_2):
-                if (flag == 0):
-                    flag = 1
-                    count = 0
-                    for j in range(1,min_length):
-                        next_frac = abs((values2[i+j] - mn_values2[i+j]))/range2
-                        if (next_frac < thresh_2):
-                            count = count+1
-                    if (count == min_length-1):
-                        slope_thresh = snv2[i]
-                        print "Slope threshold: ", values2[i]
-                    else:
-                        flag = 0
+    #    if (snv2[i] <= 0):
+       frac_diff = abs((values2[i] - mn_values2[i]))/range2
+    #    print frac_diff
+       if (frac_diff < thresh_2):
+            if (flag == 0):
+                flag = 1
+                count = 0
+                for j in range(1,min_length):
+                    next_frac = abs((values2[i+j] - mn_values2[i+j]))/range2
+                    if (next_frac < thresh_2):
+                        count = count+1
+                if (count == min_length-1):
+                    slope_thresh = snv2[i]
+                    print "Slope threshold: ", values2[i]
+                else:
+                    flag = 0
    print relief_thresh
    print slope_thresh
 
@@ -129,14 +129,14 @@ def make_q_q_plots(snv1,values1,mn_values1,snv2,values2,mn_values2, thresh_1, th
 
 if __name__ == "__main__":
 
-    DataDirectory="/media/fionaclubb/terrace_lidar/DEMs_for_analysis/Upper_Miss_reach9/"
+    DataDirectory="/media/fionaclubb/terrace_lidar/DEMs_for_analysis/Upper_Miss_reach6/"
 
     if not DataDirectory.endswith("/"):
         print("You forgot the '/' at the end of the directory, appending...")
         DataDirectory = DataDirectory+"/"
 
     # File I/0
-    DEM_name = 'Upper_Miss_reach9'
+    DEM_name = 'Upper_Miss_reach6'
     relief_file=DataDirectory+DEM_name+"_qq_relief.txt"
     slope_file=DataDirectory+DEM_name+"_qq_slope.txt"
     OutputName = DataDirectory+DEM_name+"_qq_plots"
@@ -144,12 +144,12 @@ if __name__ == "__main__":
     OutputFormat = "png"
 
     # testing new parameters
-    r_qq_lower = 40
-    r_qq_upper = 65
-    s_qq_lower = 75
-    s_qq_upper = 95
+    r_qq_lower = 50
+    r_qq_upper = 60
+    s_qq_lower = 80
+    s_qq_upper = 99
     r_threshold = 0.01
-    s_threshold = 0.1
+    s_threshold = 0.05
 
     # do the relief file
     x,y1,y2=read_q_q_file(relief_file)
@@ -161,5 +161,6 @@ if __name__ == "__main__":
 
     make_q_q_plots(x,y1,y2,slope_x,slope_y1,slope_y2,r_threshold,s_threshold)
     #plt.show()
+    print "Saving figure, the filename is ", OutputName+dot+OutputFormat
     plt.savefig((OutputName+dot+OutputFormat), format=OutputFormat)
     plt.clf()

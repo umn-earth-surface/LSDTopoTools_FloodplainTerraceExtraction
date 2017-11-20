@@ -231,34 +231,34 @@ int main (int nNumberofArgs,char *argv[])
 
 	LSDRaster Slope_new;
 
-	// if (this_bool_map["load_previous_rasters"])
-	// {
-	// 	// get the slope raster
-	// 	string slope_ext = "_slope";
-	// 	LSDRaster load_slope((DATA_DIR+DEM_ID+slope_ext), DEM_extension);
-	// 	Slope_new = load_slope;
-	// }
-	// else
-	// {
-	// get the slope
-	cout << "\t Getting the slope" << endl;
-	vector<LSDRaster> surface_fitting;
-	LSDRaster Slope;
-	vector<int> raster_selection(8, 0);
-	raster_selection[1] = 1;             // this means you want the slope
-	surface_fitting = RasterTemplate.calculate_polyfit_surface_metrics(this_float_map["surface_fitting_window_radius"], raster_selection);
-	Slope = surface_fitting[1];
+	if (this_bool_map["load_previous_rasters"])
+	{
+		// get the slope raster
+		string slope_ext = "_slope";
+		LSDRaster load_slope((DATA_DIR+DEM_ID+slope_ext), DEM_extension);
+		Slope_new = load_slope;
+	}
+	else
+	{
+		// get the slope
+		cout << "\t Getting the slope" << endl;
+		vector<LSDRaster> surface_fitting;
+		LSDRaster Slope;
+		vector<int> raster_selection(8, 0);
+		raster_selection[1] = 1;             // this means you want the slope
+		surface_fitting = RasterTemplate.calculate_polyfit_surface_metrics(this_float_map["surface_fitting_window_radius"], raster_selection);
+		Slope = surface_fitting[1];
 
-	float mask_threshold = 1.0;
-	bool below = 0;
-	// remove any stupid slope values
-	LSDRaster this_slope_raster = Slope.mask_to_nodata_using_threshold(mask_threshold, below);
+		float mask_threshold = 1.0;
+		bool below = 0;
+		// remove any stupid slope values
+		LSDRaster this_slope_raster = Slope.mask_to_nodata_using_threshold(mask_threshold, below);
 
-	// now save the slope raster in case you need to re-run.
-	string slope_ext = "_slope";
-	this_slope_raster.write_raster((DATA_DIR+DEM_ID+slope_ext), DEM_extension);
-	Slope_new = this_slope_raster;
-	//}
+		// now save the slope raster in case you need to re-run.
+		string slope_ext = "_slope";
+		this_slope_raster.write_raster((DATA_DIR+DEM_ID+slope_ext), DEM_extension);
+		Slope_new = this_slope_raster;
+	}
 
 	// get the channel relief and slope threshold using quantile-quantile plots
 	cout << "Getting channel relief threshold from QQ plots" << endl;
