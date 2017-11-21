@@ -179,6 +179,13 @@ void Get_Relief_of_Nearest_Channel(LSDJunctionNetwork& ChanNetwork, LSDFlowInfo&
 	/// @date 28/09/17
   void print_TerraceInfo_to_csv(string csv_filename, LSDRaster& ElevationRaster, LSDRaster& ChannelRelief,  LSDFlowInfo& FlowInfo, LSDSwath& Swath);
 
+  /// @brief This function prints terrace widths along the swath to csv
+  /// @param csv_filename name of csv
+  /// @param Swath swath object
+  /// @author FJC
+  /// @date 21/11/17
+  void print_TerraceWidths_to_csv(string csv_filename, LSDSwath& Swath);
+
   protected:
 
 	/// Number of rows
