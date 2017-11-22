@@ -311,6 +311,7 @@ int main (int nNumberofArgs,char *argv[])
 
 		if (this_bool_map["print_terrace_widths"])
 		{
+			cout << "Printing the terrace widths to csv..." << endl;
 			Terraces.print_TerraceWidths_to_csv(DATA_DIR+DEM_ID+"_terrace_widths.csv", TestSwath);
 		}
 	}

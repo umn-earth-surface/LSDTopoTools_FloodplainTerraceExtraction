@@ -1536,16 +1536,17 @@ vector<float> LSDSwath::get_widths_along_swath(LSDIndexRaster& RasterForAnalysis
   for (int i = 0; i < NPtsInProfile; i++)
   {
     float max_dist = 0;
-    float min_dist = 10000000000000000;
+    float min_dist = 10000000000000000;  // a really big number
     for (int row=RowStart; row<RowEnd; row++)
     {
       for (int col=ColStart; col<ColEnd; col++)
       {
         if (MaskArray[row][col] != NoDataValue)
         {
-          float this_dist = DistanceAlongBaselineArray[row][col];
-          if (this_dist == DistanceAlongBaseline[i])
+          float AlongBaseline = DistanceAlongBaselineArray[row][col];
+          if (AlongBaseline == DistanceAlongBaseline[i])
           {
+            float this_dist = DistanceToBaselineArray[row][col];
             // now check if this is the max or the min for this point.
             if (this_dist > max_dist) { max_dist = this_dist; }
             if (this_dist < min_dist) { min_dist = this_dist; }
@@ -1555,6 +1556,7 @@ vector<float> LSDSwath::get_widths_along_swath(LSDIndexRaster& RasterForAnalysis
     }
     // now get the width at this point (max - min)
     float width = max_dist - min_dist;
+    cout << "Max dist: " << max_dist << " Min dist: " << min_dist << " Width: " << width << endl;
     Widths.push_back(width);
   }
 
