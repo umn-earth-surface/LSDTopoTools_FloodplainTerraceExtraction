@@ -129,14 +129,14 @@ def make_q_q_plots(snv1,values1,mn_values1,snv2,values2,mn_values2, thresh_1, th
 
 if __name__ == "__main__":
 
-    DataDirectory="/media/fionaclubb/terrace_lidar/DEMs_for_analysis/Upper_Miss_reach6/"
+    DataDirectory="/media/fionaclubb/terrace_lidar/DEMs_for_analysis/Upper_Miss_reach1/"
 
     if not DataDirectory.endswith("/"):
         print("You forgot the '/' at the end of the directory, appending...")
         DataDirectory = DataDirectory+"/"
 
     # File I/0
-    DEM_name = 'Upper_Miss_reach6'
+    DEM_name = 'Upper_Miss_reach1'
     relief_file=DataDirectory+DEM_name+"_qq_relief.txt"
     slope_file=DataDirectory+DEM_name+"_qq_slope.txt"
     OutputName = DataDirectory+DEM_name+"_qq_plots"
@@ -145,9 +145,9 @@ if __name__ == "__main__":
 
     # testing new parameters
     r_qq_lower = 50
-    r_qq_upper = 60
-    s_qq_lower = 80
-    s_qq_upper = 99
+    r_qq_upper = 95
+    s_qq_lower = 75
+    s_qq_upper = 95
     r_threshold = 0.01
     s_threshold = 0.05
 

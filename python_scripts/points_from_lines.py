@@ -54,5 +54,22 @@ def get_points_along_line(DataDirectory, baseline_shapefile, distance, output_sh
 
 if __name__ == '__main__':
 
-    DataDirectory = '/media/fionaclubb/terrace_lidar/Terrace_experiments/OliviaLSD_test/Line__151109_MC_IW_01__DEM__0017/'
-    get_points_along_line(DataDirectory,baseline_shapefile='Line__151109_MC_IW_01__DEM__0017.shp',distance=0.001,output_shapefile='Line__151109_MC_IW_01__DEM__0017_points.shp')
+    import os
+    from glob import glob
+
+    DataDirectory =  "/media/fionaclubb/terrace_lidar/Terrace_experiments/test2/"
+    fname_prefix = 'channel_centreline'
+
+    print DataDirectory
+
+    # get all the subdirectories
+    sub_dirs = [x[0] for x in os.walk(DataDirectory)]
+    #print sub_dirs
+
+    # assigns a number to each iteration (i.e. for every .tree file in the directory)
+    for root, dirs, files in os.walk(DataDirectory):
+            for file in files:
+                if file.endswith('.shp'):
+                    print file
+                    directory=root+'/'
+                    get_points_along_line(directory,baseline_shapefile=file,distance=1,output_shapefile=file+'_points.shp')
