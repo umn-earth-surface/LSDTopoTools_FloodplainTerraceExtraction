@@ -259,19 +259,29 @@ int main (int nNumberofArgs,char *argv[])
 		string swath_ext = "_swath_raster";
 		SwathRaster.write_raster((DATA_DIR+DEM_ID+swath_ext), DEM_extension);
 
-	  // get the slope
-		cout << "\t Getting the slope" << endl;
-	  vector<LSDRaster> surface_fitting;
-	  LSDRaster Slope;
-	  vector<int> raster_selection(8, 0);
-	  raster_selection[1] = 1;             // this means you want the slope
-	  surface_fitting = RasterTemplate.calculate_polyfit_surface_metrics(this_float_map["surface_fitting_window_radius"], raster_selection);
-	  Slope = surface_fitting[1];
+		LSDRaster Slope;
+		string slope_ext = "_slope";
+		if (this_bool_map["load_previous_rasters"])
+		{
+			LSDRaster load_DEM((DATA_DIR+DEM_ID+slope_ext), DEM_extension);
+			Slope = load_DEM;
+		}
+		else
+		{
+		  // get the slope
+			cout << "\t Getting the slope" << endl;
+		  vector<LSDRaster> surface_fitting;
+		  vector<int> raster_selection(8, 0);
+		  raster_selection[1] = 1;             // this means you want the slope
+		  surface_fitting = RasterTemplate.calculate_polyfit_surface_metrics(this_float_map["surface_fitting_window_radius"], raster_selection);
 
-		float mask_threshold = 1.0;
-		bool below = 0;
-		// remove any stupid slope values
-		LSDRaster Slope_new = Slope.mask_to_nodata_using_threshold(mask_threshold, below);
+			float mask_threshold = 1.0;
+			bool below = 0;
+			// remove any stupid slope values
+			LSDRaster Slope = surface_fitting[1].mask_to_nodata_using_threshold(mask_threshold, below);
+
+			Slope.write_raster((DATA_DIR+DEM_ID+slope_ext), DEM_extension);
+		}
 
 		// get the channel relief and slope threshold using quantile-quantile plots
 		cout << "Getting channel relief threshold from QQ plots" << endl;
@@ -280,12 +290,12 @@ int main (int nNumberofArgs,char *argv[])
 
 		cout << "Getting slope threshold from QQ plots" << endl;
 		string qq_slope = DATA_DIR+DEM_ID+"_qq_slope.txt";
-		float slope_threshold_from_qq = Slope_new.get_threshold_for_floodplain_QQ(qq_slope, this_float_map["slope_threshold"], this_int_map["Slope lower percentile"], this_int_map["Slope upper percentile"]);
+		float slope_threshold_from_qq = Slope.get_threshold_for_floodplain_QQ(qq_slope, this_float_map["slope_threshold"], this_int_map["Slope lower percentile"], this_int_map["Slope upper percentile"]);
 
 		cout << "Relief threshold: " << relief_threshold_from_qq << " Slope threshold: " << slope_threshold_from_qq << endl;
 
 		// get the terrace pixels
-		LSDTerrace Terraces(SwathRaster, Slope_new, ChanNetwork, FlowInfo, relief_threshold_from_qq, slope_threshold_from_qq, this_int_map["Min patch size"], this_int_map["Threshold_SO"], this_int_map["Min terrace height"]);
+		LSDTerrace Terraces(SwathRaster, Slope, ChanNetwork, FlowInfo, relief_threshold_from_qq, slope_threshold_from_qq, this_int_map["Min patch size"], this_int_map["Threshold_SO"], this_int_map["Min terrace height"]);
 		LSDIndexRaster ConnectedComponents = Terraces.print_ConnectedComponents_to_Raster();
 		string CC_ext = "_terrace_IDs";
 		ConnectedComponents.write_raster((DATA_DIR+DEM_ID+CC_ext), DEM_extension);
@@ -307,7 +317,7 @@ int main (int nNumberofArgs,char *argv[])
 		// print the information about the baseline channel to csv
 		string channel_csv_fname = "_baseline_channel_info.csv";
 		cout << "The channel csv filename is" << DATA_DIR+DEM_ID+channel_csv_fname << endl;
-		TestSwath.print_baseline_to_csv(RasterTemplate, DATA_DIR+DEM_ID+channel_csv_fname);
+		TestSwath.print_baseline_to_csv(RasterTemplate, DATA_DIR+DEM_ID+channel_csv_fname, FlowInfo);
 
 		if (this_bool_map["print_terrace_widths"])
 		{

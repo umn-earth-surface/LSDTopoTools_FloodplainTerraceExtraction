@@ -1640,7 +1640,7 @@ void LSDSwath::write_longitudinal_profile_to_file(LSDRaster& Raster, vector<floa
 // distance along swath and the elevation of each point.
 // FJC 12/10/17
 //---------------------------------------------------------------------------//
-void LSDSwath::print_baseline_to_csv(LSDRaster& ElevationRaster, string csv_filename)
+void LSDSwath::print_baseline_to_csv(LSDRaster& ElevationRaster, string csv_filename, LSDFlowInfo& FlowInfo)
 {
   Array2D<float> ElevationArray = ElevationRaster.get_RasterData();
 
@@ -1655,7 +1655,7 @@ void LSDSwath::print_baseline_to_csv(LSDRaster& ElevationRaster, string csv_file
   }
   cout << "Opened the csv" << endl;
 
-  output_file << "DistAlongBaseline,Elevation,X,Y,latitude,longitude,row,col" << endl;
+  output_file << "DistAlongBaseline,Elevation,X,Y,latitude,longitude,row,col,node" << endl;
   double x_loc, y_loc;
   double latitude, longitude;
 
@@ -1670,7 +1670,9 @@ void LSDSwath::print_baseline_to_csv(LSDRaster& ElevationRaster, string csv_file
     ElevationRaster.get_x_and_y_locations(BaselineRows[i], BaselineCols[i], x_loc, y_loc);
     //cout << "Row: " << row << " Col: " << col << " X: " << x_loc << " Y: " << y_loc << endl;
     ElevationRaster.get_lat_and_long_locations(BaselineRows[i], BaselineCols[i], latitude, longitude, Converter);
-    output_file << DistanceAlongBaseline[i] << "," << BaselineValue[i] << "," << x_loc << "," << y_loc << "," << latitude << "," << longitude << "," << BaselineRows[i] << "," << BaselineCols[i] << endl;
+    // get the node
+    int this_node = FlowInfo.retrieve_node_from_row_and_column(BaselineRows[i],BaselineCols[i]);
+    output_file << DistanceAlongBaseline[i] << "," << BaselineValue[i] << "," << x_loc << "," << y_loc << "," << latitude << "," << longitude << "," << BaselineRows[i] << "," << BaselineCols[i] << "," << this_node << endl;
   }
   output_file.close();
 }
@@ -1758,7 +1760,7 @@ void LSDSwath::print_swath_data_to_csvs(string path, string csv_prefix, LSDFlowI
   string metadata_csv = path+csv_prefix+"_swath_metadata.csv";
 
   write_array_data_to_csv(array_csv, FlowInfo);
-  print_baseline_to_csv(ElevationRaster, baseline_csv);
+  print_baseline_to_csv(ElevationRaster, baseline_csv,FlowInfo);
   write_swath_metadata_to_csv(metadata_csv);
 }
 
