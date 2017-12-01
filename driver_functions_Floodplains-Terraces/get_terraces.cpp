@@ -317,7 +317,7 @@ int main (int nNumberofArgs,char *argv[])
 		// print the information about the baseline channel to csv
 		string channel_csv_fname = "_baseline_channel_info.csv";
 		cout << "The channel csv filename is" << DATA_DIR+DEM_ID+channel_csv_fname << endl;
-		TestSwath.print_baseline_to_csv(RasterTemplate, DATA_DIR+DEM_ID+channel_csv_fname, FlowInfo);
+		TestSwath.print_baseline_to_csv(RasterTemplate, DATA_DIR+DEM_ID+channel_csv_fname, FlowInfo, DistanceFromOutlet);
 
 		if (this_bool_map["print_terrace_widths"])
 		{

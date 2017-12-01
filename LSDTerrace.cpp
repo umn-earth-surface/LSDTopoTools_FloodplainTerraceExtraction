@@ -676,7 +676,9 @@ void LSDTerrace::print_TerraceInfo_to_csv(string csv_filename, LSDRaster& Elevat
 				ElevationRaster.get_x_and_y_locations(row, col, x_loc, y_loc);
 				//cout << "Row: " << row << " Col: " << col << " X: " << x_loc << " Y: " << y_loc << endl;
 				ElevationRaster.get_lat_and_long_locations(row, col, latitude, longitude, Converter);
+
 				float this_elev = ElevationRaster.get_data_element(row,col);
+
 				output_file << ConnectedComponents_Array[row][col] << "," << latitude << "," << longitude << "," << x_loc << "," << y_loc << "," << this_elev << "," << BaselineDistance[row][col] << "," << DistToBaseline[row][col] << "," << ChannelNodes[row][col] << "," << ReliefArray[row][col] << endl;
 			}
 		}

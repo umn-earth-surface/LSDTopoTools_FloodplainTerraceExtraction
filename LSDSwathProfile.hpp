@@ -156,10 +156,10 @@ class LSDSwath
   // write profiles to file
   void write_transverse_profile_to_file(LSDRaster& Raster, vector<float> desired_percentiles, float BinWidth, string prefix, int NormaliseToBaseline);
   void write_longitudinal_profile_to_file(LSDRaster& Raster, vector<float> desired_percentiles, float BinWidth, string prefix, int NormaliseToBaseline);
-  void print_baseline_to_csv(LSDRaster& ElevationRaster, string csv_filename, LSDFlowInfo& FlowInfo);
+  void print_baseline_to_csv(LSDRaster& ElevationRaster, string csv_filename, LSDFlowInfo& FlowInfo, LSDRaster& DistanceFromOutlet);
   void write_swath_metadata_to_csv(string csv_filename);
   void write_array_data_to_csv(string csv_filename, LSDFlowInfo& FlowInfo);
-  void print_swath_data_to_csvs(string path, string csv_prefix, LSDFlowInfo& FlowInfo, LSDRaster& ElevationRaster);
+  void print_swath_data_to_csvs(string path, string csv_prefix, LSDFlowInfo& FlowInfo, LSDRaster& ElevationRaster, LSDRaster& DistanceFromOutlet);
   // get functions
   // these get data elements
   int get_NPtsInProfile() const {return NPtsInProfile;}

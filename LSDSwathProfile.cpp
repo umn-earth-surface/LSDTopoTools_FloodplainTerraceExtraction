@@ -1640,7 +1640,7 @@ void LSDSwath::write_longitudinal_profile_to_file(LSDRaster& Raster, vector<floa
 // distance along swath and the elevation of each point.
 // FJC 12/10/17
 //---------------------------------------------------------------------------//
-void LSDSwath::print_baseline_to_csv(LSDRaster& ElevationRaster, string csv_filename, LSDFlowInfo& FlowInfo)
+void LSDSwath::print_baseline_to_csv(LSDRaster& ElevationRaster, string csv_filename, LSDFlowInfo& FlowInfo, LSDRaster& DistanceFromOutlet)
 {
   Array2D<float> ElevationArray = ElevationRaster.get_RasterData();
 
@@ -1655,7 +1655,7 @@ void LSDSwath::print_baseline_to_csv(LSDRaster& ElevationRaster, string csv_file
   }
   cout << "Opened the csv" << endl;
 
-  output_file << "DistAlongBaseline,Elevation,X,Y,latitude,longitude,row,col,node" << endl;
+  output_file << "DistAlongBaseline,Elevation,X,Y,latitude,longitude,row,col,node,DistFromOutlet" << endl;
   double x_loc, y_loc;
   double latitude, longitude;
 
@@ -1672,7 +1672,8 @@ void LSDSwath::print_baseline_to_csv(LSDRaster& ElevationRaster, string csv_file
     ElevationRaster.get_lat_and_long_locations(BaselineRows[i], BaselineCols[i], latitude, longitude, Converter);
     // get the node
     int this_node = FlowInfo.retrieve_node_from_row_and_column(BaselineRows[i],BaselineCols[i]);
-    output_file << DistanceAlongBaseline[i] << "," << BaselineValue[i] << "," << x_loc << "," << y_loc << "," << latitude << "," << longitude << "," << BaselineRows[i] << "," << BaselineCols[i] << "," << this_node << endl;
+    float DistFromOutlet = DistanceFromOutlet.get_data_element(BaselineRows[i], BaselineCols[i]);
+    output_file << DistanceAlongBaseline[i] << "," << BaselineValue[i] << "," << x_loc << "," << y_loc << "," << latitude << "," << longitude << "," << BaselineRows[i] << "," << BaselineCols[i] << "," << this_node << "," << DistFromOutlet << endl;
   }
   output_file.close();
 }
@@ -1753,14 +1754,14 @@ void LSDSwath::write_swath_metadata_to_csv(string csv_filename)
 // NOTE: this doesn't actually save any time!!!!!!!!!!!!!!!
 // FJC 13/11/17
 //---------------------------------------------------------------------------//
-void LSDSwath::print_swath_data_to_csvs(string path, string csv_prefix, LSDFlowInfo& FlowInfo, LSDRaster& ElevationRaster)
+void LSDSwath::print_swath_data_to_csvs(string path, string csv_prefix, LSDFlowInfo& FlowInfo, LSDRaster& ElevationRaster, LSDRaster& DistanceFromOutlet)
 {
   string array_csv = path+csv_prefix+"_swath_arrays.csv";
   string baseline_csv = path+csv_prefix+"_swath_baseline.csv";
   string metadata_csv = path+csv_prefix+"_swath_metadata.csv";
 
   write_array_data_to_csv(array_csv, FlowInfo);
-  print_baseline_to_csv(ElevationRaster, baseline_csv,FlowInfo);
+  print_baseline_to_csv(ElevationRaster, baseline_csv,FlowInfo,DistanceFromOutlet);
   write_swath_metadata_to_csv(metadata_csv);
 }
 
