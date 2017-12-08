@@ -57,7 +57,7 @@ if __name__ == '__main__':
     import os
     from glob import glob
 
-    DataDirectory =  "/media/fionaclubb/terrace_lidar/Terrace_experiments/test2/"
+    DataDirectory =  "/home/s0923330/Data_for_papers/terrace_experiments/2017_02_23_BL_25mmhr_scans_and_centerlines_for_LSDTopoTools/"
     fname_prefix = 'channel_centreline'
 
     print DataDirectory
@@ -70,6 +70,9 @@ if __name__ == '__main__':
     for root, dirs, files in os.walk(DataDirectory):
             for file in files:
                 if file.endswith('.shp'):
-                    print file
-                    directory=root+'/'
-                    get_points_along_line(directory,baseline_shapefile=file,distance=1,output_shapefile=file+'_points.shp')
+                    if 'points' not in file:
+                        print file
+                        split_fname = file.split('.shp')
+                        print split_fname[0]
+                        directory=root+'/'
+                        get_points_along_line(directory,baseline_shapefile=file,distance=1,output_shapefile=split_fname[0]+'_points.shp')

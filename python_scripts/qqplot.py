@@ -57,7 +57,7 @@ def fit_normal_distribution(quantiles, values, lower_percentile=25, upper_percen
 def make_q_q_plots(snv1,values1,mn_values1,snv2,values2,mn_values2, thresh_1, thresh_2):
 
    flag = 0
-   min_length = 10
+   min_length = 200
    range1 = np.ptp(values1)
    #print "Relief range: ", range1
    for i in range(0,len(snv1)):
