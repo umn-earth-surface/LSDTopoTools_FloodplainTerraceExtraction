@@ -144,12 +144,12 @@ if __name__ == "__main__":
     OutputFormat = "png"
 
     # testing new parameters
-    r_qq_lower = 50
+    r_qq_lower = 52
     r_qq_upper = 60
     s_qq_lower = 80
     s_qq_upper = 99
     r_threshold = 0.01
-    s_threshold = 0.05
+    s_threshold = 0.005
 
     # do the relief file
     x,y1,y2=read_q_q_file(relief_file)

@@ -14,7 +14,7 @@ import subprocess
 
 
 #DataDirectory =  "/home/smudd/papers/Rahul_Himalaya/Chi_analysis/Mandakini/Junction_76/"
-DataDirectory =  "/media/fionaclubb/terrace_lidar/DEMs_for_analysis/"
+DataDirectory =  "/media/fionaclubb/terrace_lidar/Terrace_runs_v2/"
 fname_prefix = 'LSDTT_terraces'
 
 print DataDirectory
