@@ -87,7 +87,8 @@ int main (int nNumberofArgs,char *argv[])
 	// set default bool parameters
 	bool_default_map["Filter topography"] = true;
 	bool_default_map["write_hillshade"] = false;
-	bool_default_map["load_previous_rasters"] = false;
+	bool_default_map["raster_is_filled"] = false;
+	bool_default_map["load_slope_raster"] = false;
 	bool_default_map["remove_channel_terraces"] = false;
 	bool_default_map["print_stream_order_raster"] = false;
 
@@ -128,15 +129,17 @@ int main (int nNumberofArgs,char *argv[])
 
 	LSDRaster RasterTemplate;
 
-	if(this_bool_map["load_previous_rasters"])
+	if(this_bool_map["raster_is_filled"])
 	{
 		if (this_bool_map["Filter topography"])
 		{
+			cout << "Loading the filtered DEM" << endl;
 			LSDRaster load_DEM((DATA_DIR+DEM_ID+"_filtered"), DEM_extension);
 			RasterTemplate = load_DEM;
 		}
 		else
 		{
+			cout << "Loading the filled DEM" << endl;
 			LSDRaster load_DEM((DATA_DIR+DEM_ID+"_filled"), DEM_extension);
 			RasterTemplate = load_DEM;
 		}
@@ -164,6 +167,7 @@ int main (int nNumberofArgs,char *argv[])
 		else
 		{
 			//don't do the filtering, just fill the DEM
+			cout << "Filling the DEM..." << endl;
 			LSDRaster load_DEM((DATA_DIR+DEM_ID), DEM_extension);
 			RasterTemplate = load_DEM;
 			RasterTemplate = RasterTemplate.fill(this_float_map["Min slope filling"]);
@@ -231,7 +235,7 @@ int main (int nNumberofArgs,char *argv[])
 
 	LSDRaster Slope_new;
 
-	if (this_bool_map["load_previous_rasters"])
+	if (this_bool_map["load_slope_raster"])
 	{
 		// get the slope raster
 		string slope_ext = "_slope";
