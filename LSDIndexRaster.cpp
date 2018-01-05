@@ -2808,6 +2808,7 @@ Array2D<int> LSDIndexRaster::get_valley_sides(LSDRaster& Elevation)
             count++;
           }
 				}
+        //cout << "Count: " << count << endl;
         //cout << "Sum of elevations: " << sum_elevs << endl;
 				// now check to see how many pixels are no data values. If greater than 1
 				// count as an edge.
@@ -2815,7 +2816,6 @@ Array2D<int> LSDIndexRaster::get_valley_sides(LSDRaster& Elevation)
 				{
 					// now check the average elevation of these cells.  Select as valley side if
 					// average elevation is higher than current elevation
-          cout << "Count: " << count << " sum elev: " << sum_elevs << endl;
 					float avg_elev = sum_elevs/count;
 					float this_elev = ElevationArray[row][col];
 					if (this_elev < avg_elev)
