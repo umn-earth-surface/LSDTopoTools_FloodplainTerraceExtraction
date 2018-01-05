@@ -97,6 +97,16 @@ void Get_Relief_of_Nearest_Channel(LSDJunctionNetwork& ChanNetwork, LSDFlowInfo&
 	/// @date 30/11/17
   Array2D<int> get_ChannelNodeArray(LSDSwath& Swath, Array2D<float> BaselineDistance, LSDFlowInfo& FlowInfo);
 
+  /// FUNCTIONS TO GET VALLEY WIDTH
+
+  /// @brief This function gets the valley sides.  Finds each pixel not surrounded
+  /// by floodplain and terrace pixels.  Selected if surrounding pixels are higher
+  /// in elevation than the chosen pixel.
+  /// @param Elevation LSDRaster of elevations
+  /// @author FJC
+  /// @date 22/12/17
+  Array2D<int> get_valley_sides(LSDRaster& Elevation);
+
 	/// FUNCTIONS TO GENERATE RASTERS
 
 	/// @brief This function prints the connected components array to a raster

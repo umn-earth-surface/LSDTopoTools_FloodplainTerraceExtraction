@@ -2708,4 +2708,125 @@ float LSDIndexRaster::GetAreaDifference(LSDIndexRaster& ActualRaster)
 	return PercentDiff;
 }
 
+//----------------------------------------------------------------------------------------
+// Function to get the valley sides.  Takes every connected components patch and finds the
+// edge pixels: pixels not surrounded by floodplain/terrace pixels where the surrounding
+// pixels are higher relief.
+// FJC 22/12/17
+//----------------------------------------------------------------------------------------
+Array2D<int> LSDIndexRaster::get_valley_sides(LSDRaster& Elevation)
+{
+	Array2D<int> ValleySides(NRows,NCols, 0);
+	Array2D<float> ElevationArray = Elevation.get_RasterData();
+
+  cout << "Got the elevation array, now finding valley sides..." << endl;
+
+	// first loop through the connected components array and find every pixel not surrounded
+	// by other floodplain/terrace pixels
+	for (int row = 0; row < NRows; row++)
+	{
+		for (int col= 0; col < NCols; col++)
+		{
+			if (RasterData[row][col] != NoDataValue)
+			{
+				int count = 0;
+				float sum_elevs = 0;
+
+        // set exceptions for end rows and cols
+        int min_row = row-1;
+        int max_row = row+1;
+        if (min_row < 0) min_row = 0;
+        if (max_row >= NRows) max_row = NRows-1;
+
+        int min_col = col-1;
+        int max_col = col+1;
+        if (min_col < 0) min_col = 0;
+        if (max_col >= NCols) max_col = NCols-1;
+
+				// check surrounding pixels
+				if (RasterData[min_row][col] == NoDataValue) //north
+				{
+          if (ElevationArray[min_row][col] != NoDataValue)
+          {
+            sum_elevs += ElevationArray[min_row][col];
+            count++;
+          }
+				}
+				if (RasterData[max_row][col] == NoDataValue) //south
+				{
+          if (ElevationArray[max_row][col] != NoDataValue)
+          {
+            sum_elevs += ElevationArray[max_row][col];
+            count++;
+          }
+				}
+				if (RasterData[row][min_col] == NoDataValue) //west
+				{
+          if (ElevationArray[row][min_col] != NoDataValue)
+          {
+  					sum_elevs += ElevationArray[row][min_col];
+            count++;
+          }
+				}
+				if (RasterData[row][max_col] == NoDataValue) //east
+				{
+          if (ElevationArray[row][max_col] != NoDataValue)
+          {
+            sum_elevs += ElevationArray[row][max_col];
+					  count++;
+          }
+				}
+				if (RasterData[min_row][max_col] == NoDataValue) //northeast
+				{
+          if (ElevationArray[min_row][max_col] != NoDataValue)
+          {
+					  sum_elevs += ElevationArray[min_row][max_col];
+            count++;
+          }
+				}
+				if (RasterData[max_row][max_col] == NoDataValue) //southeast
+				{
+          if (ElevationArray[max_row][max_col] != NoDataValue)
+          {
+					  sum_elevs += ElevationArray[max_row][max_col];
+            count++;
+          }
+				}
+				if (RasterData[max_row][min_col] == NoDataValue) //southwest
+				{
+          if (ElevationArray[max_row][min_col] != NoDataValue)
+          {
+						sum_elevs += ElevationArray[max_row][min_col];
+            count++;
+          }
+				}
+				if (RasterData[min_row][min_col] == NoDataValue) //northwest
+				{
+          if (ElevationArray[min_row][min_col] != NoDataValue)
+          {
+  					sum_elevs += ElevationArray[min_row][min_col];
+            count++;
+          }
+				}
+        //cout << "Sum of elevations: " << sum_elevs << endl;
+				// now check to see how many pixels are no data values. If greater than 1
+				// count as an edge.
+				if (count > 1)
+				{
+					// now check the average elevation of these cells.  Select as valley side if
+					// average elevation is higher than current elevation
+          cout << "Count: " << count << " sum elev: " << sum_elevs << endl;
+					float avg_elev = sum_elevs/count;
+					float this_elev = ElevationArray[row][col];
+					if (this_elev < avg_elev)
+					{
+						ValleySides[row][col] = 1;
+					}
+				}
+			}
+		}
+	}
+	return ValleySides;
+}
+
 #endif

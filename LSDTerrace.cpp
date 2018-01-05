@@ -410,6 +410,91 @@ Array2D<int> LSDTerrace::get_ChannelNodeArray(LSDSwath& Swath, Array2D<float> Ba
 }
 
 //----------------------------------------------------------------------------------------
+// FUNCTIONS TO CALCULATE VALLEY WIDTH
+//----------------------------------------------------------------------------------------
+
+//----------------------------------------------------------------------------------------
+// Function to get the valley sides.  Takes every connected components patch and finds the
+// edge pixels: pixels not surrounded by floodplain/terrace pixels where the surrounding
+// pixels are higher relief.
+// FJC 22/12/17
+//----------------------------------------------------------------------------------------
+Array2D<int> LSDTerrace::get_valley_sides(LSDRaster& Elevation)
+{
+	Array2D<int> ValleySides(NRows,NCols, 0);
+	Array2D<float> ElevationArray = Elevation.get_RasterData();
+
+	// first loop through the connected components array and find every pixel not surrounded
+	// by other floodplain/terrace pixels
+	for (int row = 0; row < NRows; row++)
+	{
+		for (int col= 0; col < NCols; col++)
+		{
+			if (ConnectedComponents_Array[row][col] != NoDataValue)
+			{
+				int count = 0;
+				float sum_elevs = 0;
+				// check surrounding pixels
+				if (ConnectedComponents_Array[row-1][col] == NoDataValue) //north
+				{
+					count++;
+					sum_elevs += ElevationArray[row-1][col];
+				}
+				if (ConnectedComponents_Array[row+1][col] == NoDataValue) //south
+				{
+					count++;
+					sum_elevs += ElevationArray[row+1][col];
+				}
+				if (ConnectedComponents_Array[row][col-1] == NoDataValue) //west
+				{
+					count++;
+					sum_elevs += ElevationArray[row][col-1];
+				}
+				if (ConnectedComponents_Array[row][col+1] == NoDataValue) //east
+				{
+					count++;
+					sum_elevs += ElevationArray[row][col+1];
+				}
+				if (ConnectedComponents_Array[row-1][col+1] == NoDataValue) //northeast
+				{
+					count++;
+					sum_elevs += ElevationArray[row-1][col+1];
+				}
+				if (ConnectedComponents_Array[row+1][col+1] == NoDataValue) //southeast
+				{
+					count++;
+					sum_elevs += ElevationArray[row+1][col+1];
+				}
+				if (ConnectedComponents_Array[row+1][col-1] == NoDataValue) //southwest
+				{
+					count++;
+					sum_elevs += ElevationArray[row+1][col-1];
+				}
+				if (ConnectedComponents_Array[row-1][col-1] == NoDataValue) //northwest
+				{
+					count++;
+					sum_elevs += ElevationArray[row-1][col-1];
+				}
+				// now check to see how many pixels are floodplain/terrace. If greater than 1
+				// count as an edge.
+				if (count > 1)
+				{
+					// now check the average elevation of these cells.  Select as valley side if
+					// average elevation is higher than current elevation
+					float avg_elev = sum_elevs/count;
+					float this_elev = ElevationArray[row][col];
+					if (this_elev < avg_elev)
+					{
+						ValleySides[row][col] == 1;
+					}
+				}
+			}
+		}
+	}
+	return ValleySides;
+}
+
+//----------------------------------------------------------------------------------------
 // FUNCTIONS TO GENERATE RASTERS
 //----------------------------------------------------------------------------------------
 
